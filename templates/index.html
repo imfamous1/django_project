@@ -3,11 +3,30 @@
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
+    <style>
+        body {
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            flex-direction: column;
+            align-items: center;
+            font-size: 16px;
+            font-family: Tahoma;
+        }
+
+    </style>
 </head>
 <body>
-    <h1>HELL TO WORLD!!@!</h1>
-    <h1>HELL TO WORLD!!@!</h1>
-    <h1>HELL TO WORLD!!@!</h1>
-    <h1>HELL TO WORLD!!@!</h1>
+    {% for user in data %}
+    <h2>Пользователь: {{forloop.counter}}</h2>
+    Роль: {{ user.role.name }}
+    {% if user.username == 'dog' %}
+    <b style="color:red">{{user.username}} {{user.user_id}}</b>
+    {% else %}
+    <b style="color:green">{{user.username}} {{user.user_id}}</b>
+    {% endif %}
+
+    {% endfor %}
+
 </body>
 </html>

@@ -1,31 +1,27 @@
+from django.http import HttpResponse
 from django.shortcuts import render
 
-from myapp1.models import TelegramUsers
+from myapp1.models import TelegramUsers, Roles
 
-
-# Create your views here.
-# MODEL-VIEW-TEMPLATE
 
 def show_index_page(request):
-    """
-    some_users = TelegramUsers.objects.filter(wallet=100) # WHERE
-    print(some_users)
+    data = TelegramUsers.objects.all()
+    return render(request, 'index.html', context={'data': data})
 
-    all_users = TelegramUsers.objects.all()
-    print(all_users)
 
-    new_user = TelegramUsers(user_id='312412512', username='cat2', wallet=500)
-    new_user.save()
+def show_roles_page(request):
+    all_roles = Roles.objects.all()
 
-    for user in all_users:
-        print(user.user_id, user.username, user.wallet)
+    # Способ 1. Фильтр через связанное поле
+    # users_adm_role = TelegramUsers.objects.filter(role__name='Администратор')
 
-    user_to_change = TelegramUsers.objects.get(id=1)
-    user_to_change.username = 'rat'
-    user_to_change.save()
-    """
+    # Способ 2. Фильтр через предварительно полученный объект
+    # role_design = Roles.objects.get(name='Дизайнер')
+    # users_designer_role = TelegramUsers.objects.filter(role=role_design)
 
-    TelegramUsers.objects.get(id=1).delete()
+    # Способ 3. Обратный запрос через Related Manager
+    # role_develop = Roles.objects.get(name='Разработчик')
+    # users_develop_role = role_develop.telegramusers_set.all()
+    # print(users_develop_role)
 
-    return render(request, 'index.html')
-
+    return render(request, 'roles.html', context={'data': all_roles})
