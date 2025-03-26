@@ -1,3 +1,5 @@
+import json
+
 from django.http import HttpResponse, JsonResponse
 from django.shortcuts import render
 from django.views.decorators.csrf import csrf_exempt
@@ -43,3 +45,50 @@ def get_user_data(request):
             return JsonResponse({'error': 'User not found'}, status=404)
     elif request.method == 'POST':
         return JsonResponse({'data': 'POST IS WORKED'})
+
+
+@csrf_exempt
+def save_user(request):
+    if request.method == 'POST':
+        try:
+            data = json.loads(request.body)
+            user_id = data.get('user_id')
+            username = data.get('username', '')
+
+            # Создаем или обновляем пользователя
+            user, created = TelegramUsers.objects.update_or_create(
+                user_id=user_id,
+                defaults={
+                    'username': username,
+                    # Другие поля можно оставить по умолчанию
+                }
+            )
+
+            return JsonResponse({
+                'status': 'success',
+                'user_id': user.user_id,
+                'created': created
+            })
+
+        except Exception as e:
+            return JsonResponse({'error': str(e)}, status=400)
+
+    return JsonResponse({'error': 'Invalid request method'}, status=405)
+
+
+def get_all_users(request):
+    if request.method == 'GET':
+        users = TelegramUsers.objects.all()
+        users_list = []
+
+        for user in users:
+            users_list.append({
+                'user_id': user.user_id,
+                'username': user.username,
+                'first_name': getattr(user, 'first_name', ''),
+                'last_name': getattr(user, 'last_name', '')
+            })
+
+        return JsonResponse({'users': users_list})
+
+    return JsonResponse({'error': 'Invalid request method'}, status=405)

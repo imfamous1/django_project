@@ -17,11 +17,13 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 
-from myapp1.views import show_index_page, show_roles_page, get_user_data
+from myapp1.views import show_index_page, show_roles_page, get_user_data, save_user, get_all_users
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', show_index_page),
     path('roles', show_roles_page),
-    path('get_user_data/', get_user_data, name='get_user_data')
+    path('get_user_data/', get_user_data, name='get_user_data'),
+    path('save_user/', save_user, name='save_user'),
+    path('get_all_users/', get_all_users, name='get_all_users'),
 ]

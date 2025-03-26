@@ -1,7 +1,7 @@
 import os
 import sys
 
-path = '/home/zkokorin/ваш-проект'
+path = '/home/zkokorin/django_project'
 if path not in sys.path:
     sys.path.append(path)
 
