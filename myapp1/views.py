@@ -1,5 +1,6 @@
-from django.http import HttpResponse
+from django.http import HttpResponse, JsonResponse
 from django.shortcuts import render
+from django.views.decorators.csrf import csrf_exempt
 
 from myapp1.models import TelegramUsers, Roles
 
@@ -25,3 +26,20 @@ def show_roles_page(request):
     # print(users_develop_role)
 
     return render(request, 'roles.html', context={'data': all_roles})
+
+
+def get_user_data(request):
+    if request.method == 'GET':
+        user_id = request.GET.get('user_id')
+        try:
+            user = TelegramUsers.objects.get(user_id=user_id)
+            data = {
+                'username': user.username,
+                'role': user.role.name,
+                'user_id': user.user_id,
+            }
+            return JsonResponse(data)
+        except TelegramUsers.DoesNotExist:
+            return JsonResponse({'error': 'User not found'}, status=404)
+    elif request.method == 'POST':
+        return JsonResponse({'data': 'POST IS WORKED'})
